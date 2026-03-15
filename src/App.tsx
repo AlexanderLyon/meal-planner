@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import { HouseholdProvider } from '@context/householdProvider';
+import { useHousehold } from '@context/useHousehold';
+import { Onboarding } from '@components/onboarding';
+import { Dashboard } from '@components/dashboard';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { householdCode } = useHousehold();
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <header className="app-header">
+        <div>
+          <p className="eyebrow">Meal Planner</p>
+        </div>
+        {householdCode ? (
+          <nav className="navigation">
+            <p>This Week</p>
+            <p>Meals</p>
+            <p>Ingredients</p>
+            <p>Shopping List</p>
+          </nav>
+        ) : null}
+      </header>
+
+      <>{!householdCode ? <Onboarding /> : <Dashboard />}</>
     </>
-  )
+  );
 }
 
-export default App
+function AppWrapper() {
+  return (
+    <div className="app">
+      <HouseholdProvider>
+        <App />
+      </HouseholdProvider>
+    </div>
+  );
+}
+
+export default AppWrapper;

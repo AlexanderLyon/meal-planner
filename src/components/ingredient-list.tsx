@@ -5,7 +5,7 @@ import { Button } from '@components/button';
 import type { IngredientItem } from '../types';
 
 export const IngredientList: React.FC = () => {
-  const { householdCode } = useHousehold();
+  const { household } = useHousehold();
   const [pantry, setPantry] = useState<IngredientItem[]>([]);
   const [pantryDraft, setPantryDraft] = useState({
     name: '',
@@ -16,7 +16,7 @@ export const IngredientList: React.FC = () => {
     const { data, error } = await supabase
       .from('ingredients')
       .select('*')
-      .eq('household_id', householdCode);
+      .eq('household_id', household?.id);
     if (error) {
       console.error(error);
     } else if (data) {
@@ -30,7 +30,7 @@ export const IngredientList: React.FC = () => {
     const { data, error } = await supabase
       .from('ingredients')
       .insert({
-        household_id: householdCode,
+        household_id: household?.id,
         name,
         preferred_store: preferredStore,
       })

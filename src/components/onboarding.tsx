@@ -10,23 +10,17 @@ const OnboardingMode = {
 type OnboardingMode = (typeof OnboardingMode)[keyof typeof OnboardingMode];
 
 export const Onboarding: React.FC = () => {
-  const { setHouseholdCode } = useHousehold();
+  const { joinHouseholdById, createHousehold } = useHousehold();
   const [onboardingMode, setOnboardingMode] = useState<OnboardingMode>(OnboardingMode.Create);
-  const [generatedCode, setGeneratedCode] = useState('');
+  const [householdName, setHouseholdName] = useState('');
   const [joinCode, setJoinCode] = useState('');
 
-  const createHouseholdCode = () => Math.random().toString(36).slice(2, 8).toUpperCase();
-
-  const handleCreateHousehold = () => {
-    const code = createHouseholdCode();
-    setGeneratedCode(code);
-    setHouseholdCode(code);
+  const handleCreateHousehold = async (name: string) => {
+    await createHousehold(name);
   };
 
-  const handleJoinHousehold = () => {
-    const sanitized = joinCode.trim().toUpperCase();
-    if (!sanitized) return;
-    setHouseholdCode(sanitized);
+  const handleJoinHousehold = async () => {
+    await joinHouseholdById(joinCode.trim());
   };
 
   return (
@@ -63,19 +57,22 @@ export const Onboarding: React.FC = () => {
           <div className="form-grid">
             <div>
               <label className="label">Household name</label>
-              <input placeholder="The Sunday Table" />
+              <input
+                placeholder="The Sunday Table"
+                value={householdName}
+                onChange={(event) => setHouseholdName(event.target.value)}
+              />
             </div>
-            <Button className="primary" onClick={handleCreateHousehold}>
+            <Button className="primary" onClick={() => handleCreateHousehold(householdName)}>
               Create and get code
             </Button>
-            {generatedCode ? <p className="pill">Your code: {generatedCode}</p> : null}
           </div>
         ) : (
           <div className="form-grid">
             <div>
               <label className="label">Household code</label>
               <input
-                placeholder="AB12CD"
+                placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
                 value={joinCode}
                 onChange={(event) => setJoinCode(event.target.value)}
               />

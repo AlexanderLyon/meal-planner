@@ -3,11 +3,12 @@ import { useHousehold } from '@context/useHousehold';
 import { Button } from '@components/button';
 
 export const ShareCode: React.FC = () => {
-  const { householdCode, clearHouseholdCode } = useHousehold();
+  const { household, leaveHousehold } = useHousehold();
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = (): void => {
-    navigator.clipboard.writeText(householdCode);
+    if (!household?.id) return;
+    navigator.clipboard.writeText(household.id);
     setIsCopied(true);
   };
 
@@ -18,14 +19,16 @@ export const ShareCode: React.FC = () => {
     return () => clearTimeout(timeout);
   }, [isCopied]);
 
+  if (!household) return null;
+
   return (
     <div className="household-card">
-      <span className="household-label">Household</span>
-      <strong>
-        {householdCode} <button onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
-      </strong>
+      <strong className="household-label">{household.name}</strong>
+      <span className="household-code">
+        {household.id} <button onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
+      </span>
       <p className="muted">Share this code to invite others.</p>
-      <Button onClick={clearHouseholdCode}>Change current household</Button>
+      <Button onClick={leaveHousehold}>Change current household</Button>
     </div>
   );
 };

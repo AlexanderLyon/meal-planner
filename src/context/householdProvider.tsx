@@ -1,12 +1,20 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
+import { supabase } from '@utils/supabase';
 
 const HOUSEHOLD_STORAGE_KEY = 'meal-planner.household-code';
 
+type Household = {
+  name: string;
+  id: string;
+};
+
 export type HouseholdContextValue = {
-  householdCode: string;
-  setHouseholdCode: (code: string) => void;
-  clearHouseholdCode: () => void;
+  household: Household | null;
+  saveHousehold: (newHousehold: Household) => void;
+  leaveHousehold: () => void;
+  joinHouseholdById: (id: string) => Promise<void>;
+  createHousehold: (name: string) => Promise<void>;
 };
 
 export const HouseholdContext = createContext<HouseholdContextValue | undefined>(undefined);
@@ -16,42 +24,73 @@ type HouseholdProviderProps = {
   householdCode?: string;
 };
 
-export function HouseholdProvider({ children, householdCode }: HouseholdProviderProps) {
-  const [storedHouseholdCode, setStoredHouseholdCode] = useState<string>(() => {
-    const initialCode = householdCode?.trim().toUpperCase();
+export function HouseholdProvider({ children }: HouseholdProviderProps) {
+  const [household, setHousehold] = useState<Household | null>(() => {
+    if (typeof window === 'undefined') return null;
 
-    if (initialCode) return initialCode;
-    if (typeof window === 'undefined') return '';
+    const storedHousehold = localStorage.getItem(HOUSEHOLD_STORAGE_KEY);
 
-    return localStorage.getItem(HOUSEHOLD_STORAGE_KEY) ?? '';
-  });
-
-  const setHouseholdCode = useCallback((code: string) => {
-    setStoredHouseholdCode(code.trim().toUpperCase());
-  }, []);
-
-  const clearHouseholdCode = useCallback(() => {
-    setStoredHouseholdCode('');
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    if (storedHouseholdCode) {
-      localStorage.setItem(HOUSEHOLD_STORAGE_KEY, storedHouseholdCode);
-      return;
+    if (storedHousehold) {
+      try {
+        return JSON.parse(storedHousehold) as Household;
+      } catch {
+        return null;
+      }
     }
 
+    return null;
+  });
+
+  const saveHousehold = useCallback((updatedHousehold: Household) => {
+    setHousehold(updatedHousehold);
+  }, []);
+
+  const leaveHousehold = useCallback(() => {
+    setHousehold(null);
     localStorage.removeItem(HOUSEHOLD_STORAGE_KEY);
-  }, [storedHouseholdCode]);
+  }, []);
+
+  const createHousehold = async (name: string) => {
+    const { data, error } = await supabase
+      .from('households')
+      .insert({ name: name.trim() })
+      .select();
+    if (error) {
+      console.error(error);
+    } else if (data) {
+      const newHousehold: Household = {
+        id: data[0].id,
+        name: data[0].name,
+      };
+      saveHousehold(newHousehold);
+      localStorage.setItem(HOUSEHOLD_STORAGE_KEY, JSON.stringify(newHousehold));
+    }
+  };
+
+  const joinHouseholdById = async (id: string) => {
+    const { data, error } = await supabase.from('households').select('*').eq('id', id).single();
+    if (error) {
+      console.error(error);
+      leaveHousehold();
+    } else if (data) {
+      const newHousehold: Household = {
+        id: data.id,
+        name: data.name,
+      };
+      saveHousehold(newHousehold);
+      localStorage.setItem(HOUSEHOLD_STORAGE_KEY, JSON.stringify(newHousehold));
+    }
+  };
 
   const value = useMemo(
     () => ({
-      householdCode: storedHouseholdCode,
-      setHouseholdCode,
-      clearHouseholdCode,
+      household,
+      saveHousehold,
+      leaveHousehold,
+      createHousehold,
+      joinHouseholdById,
     }),
-    [clearHouseholdCode, setHouseholdCode, storedHouseholdCode]
+    [leaveHousehold, saveHousehold, createHousehold, joinHouseholdById, household]
   );
 
   return <HouseholdContext.Provider value={value}>{children}</HouseholdContext.Provider>;

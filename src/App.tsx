@@ -5,7 +5,7 @@ import { Onboarding } from '@components/onboarding';
 import { Dashboard } from '@components/dashboard';
 
 function App() {
-  const { householdCode } = useHousehold();
+  const { household } = useHousehold();
 
   return (
     <>
@@ -13,7 +13,7 @@ function App() {
         <div>
           <p className="eyebrow">Meal Planner</p>
         </div>
-        {householdCode ? (
+        {household?.id ? (
           <nav className="navigation">
             <p>This Week</p>
             <p>Meals</p>
@@ -23,7 +23,7 @@ function App() {
         ) : null}
       </header>
 
-      <>{!householdCode ? <Onboarding /> : <Dashboard />}</>
+      <>{!household?.id ? <Onboarding /> : <Dashboard />}</>
     </>
   );
 }

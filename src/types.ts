@@ -9,6 +9,7 @@ export type Meal = {
   id: string;
   name: string;
   ingredients: MealIngredient[];
+  instructions?: string;
 };
 
 export type MealPlanDay = {

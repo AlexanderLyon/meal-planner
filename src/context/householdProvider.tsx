@@ -1,13 +1,9 @@
 import { createContext, useCallback, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { supabase } from '@utils/supabase';
+import type { Household } from '../types';
 
 const HOUSEHOLD_STORAGE_KEY = 'meal-planner.household-code';
-
-type Household = {
-  name: string;
-  id: string;
-};
 
 export type HouseholdContextValue = {
   household: Household | null;

@@ -3,6 +3,7 @@ import { Button } from '@components/button';
 import { useHousehold } from '@context/useHousehold';
 import { supabase } from '@utils/supabase';
 import type { Meal, MealIngredient } from '../types';
+import { useMeals } from '@context/mealsProvider';
 
 const NewMealForm = ({ onMealAdded }: { onMealAdded?: () => void }) => {
   const { household } = useHousehold();
@@ -159,10 +160,9 @@ const SavedMeals = ({ meals }: { meals: Meal[] }) => {
   );
 };
 
-export const MealsList: React.FC<{ meals: Meal[]; onMealAdded?: () => void }> = ({
-  meals,
-  onMealAdded,
-}) => {
+export const MealsList: React.FC = () => {
+  const { meals, refresh } = useMeals();
+
   return (
     <section className="panel">
       <div className="panel-head">
@@ -171,7 +171,7 @@ export const MealsList: React.FC<{ meals: Meal[]; onMealAdded?: () => void }> = 
       </div>
 
       <div className="meal-grid">
-        <NewMealForm onMealAdded={onMealAdded} />
+        <NewMealForm onMealAdded={refresh} />
         <SavedMeals meals={meals} />
       </div>
     </section>

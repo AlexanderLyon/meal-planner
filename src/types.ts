@@ -1,3 +1,8 @@
+export type Household = {
+  name: string;
+  id: string;
+};
+
 export type MealIngredient = {
   id: string;
   name: string;

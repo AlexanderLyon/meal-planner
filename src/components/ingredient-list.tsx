@@ -2,27 +2,15 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@utils/supabase';
 import { useHousehold } from '@context/useHousehold';
 import { Button } from '@components/button';
-import type { IngredientItem } from '../types';
+import { useMeals } from '@context/mealsProvider';
 
 export const IngredientList: React.FC = () => {
   const { household } = useHousehold();
-  const [pantry, setPantry] = useState<IngredientItem[]>([]);
+  const { ingredients, refresh } = useMeals();
   const [pantryDraft, setPantryDraft] = useState({
     name: '',
     preferredStore: '',
   });
-
-  const fetchIngredientsList = async () => {
-    const { data, error } = await supabase
-      .from('ingredients')
-      .select('*')
-      .eq('household_id', household?.id);
-    if (error) {
-      console.error(error);
-    } else if (data) {
-      setPantry(data);
-    }
-  };
 
   const handleAddIngredientItem = async () => {
     const name = pantryDraft.name.trim();
@@ -41,13 +29,9 @@ export const IngredientList: React.FC = () => {
       console.error(error);
     } else if (data) {
       setPantryDraft({ name: '', preferredStore: '' });
-      await fetchIngredientsList(); // Refresh the list after adding
+      refresh(); // Refresh the list after adding
     }
   };
-
-  useEffect(() => {
-    fetchIngredientsList();
-  }, []);
 
   return (
     <section className="panel">
@@ -94,7 +78,7 @@ export const IngredientList: React.FC = () => {
         </div>
 
         <div className="ingredient-list">
-          {pantry.map((item) => (
+          {ingredients.map((item) => (
             <article key={item.id} className="meal-card">
               <h3>{item.name}</h3>
               {item.preferred_brand && (

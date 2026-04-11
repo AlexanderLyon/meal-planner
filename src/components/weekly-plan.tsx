@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import type { Meal, MealPlanDay } from '../types';
-
-interface WeeklyPlanProps {
-  meals: Meal[];
-}
+import type { MealPlanDay } from '../types';
+import { useMeals } from '@/context/mealsProvider';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-export const WeeklyPlan: React.FC<WeeklyPlanProps> = ({ meals }) => {
+export const WeeklyPlan: React.FC = () => {
+  const { meals } = useMeals();
   const [mealPlan, setMealPlan] = useState<MealPlanDay[]>(
     daysOfWeek.map((day) => ({ day, mealId: '', note: '' }))
   );

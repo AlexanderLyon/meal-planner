@@ -64,49 +64,52 @@ const NewMealForm = ({ onMealAdded }: { onMealAdded?: () => void }) => {
       <div>
         <label className="label">Meal name</label>
         <input
-          placeholder="Crispy tofu bowls"
+          placeholder="Name of the meal"
           value={mealName}
           onChange={(event) => setMealName(event.target.value)}
         />
       </div>
 
-      <div className="ingredient-row">
-        <input
-          placeholder="Ingredient"
-          value={ingredientDraft.name}
-          onChange={(event) =>
-            setIngredientDraft((prev) => ({
-              ...prev,
-              name: event.target.value,
-            }))
-          }
-        />
-        <input
-          type="number"
-          min="0"
-          step="0.25"
-          placeholder="Qty"
-          value={ingredientDraft.quantity}
-          onChange={(event) =>
-            setIngredientDraft((prev) => ({
-              ...prev,
-              quantity: event.target.value,
-            }))
-          }
-        />
-        <input
-          placeholder="Unit"
-          value={ingredientDraft.unit}
-          onChange={(event) =>
-            setIngredientDraft((prev) => ({
-              ...prev,
-              unit: event.target.value,
-            }))
-          }
-        />
-        <Button className="ghost" onClick={handleAddIngredient}>
-          Add
-        </Button>
+      <div>
+        <label className="label">Ingredients List</label>
+        <div className="ingredient-row">
+          <input
+            placeholder="Ingredient"
+            value={ingredientDraft.name}
+            onChange={(event) =>
+              setIngredientDraft((prev) => ({
+                ...prev,
+                name: event.target.value,
+              }))
+            }
+          />
+          <input
+            type="number"
+            min="0"
+            step="0.25"
+            placeholder="Qty"
+            value={ingredientDraft.quantity}
+            onChange={(event) =>
+              setIngredientDraft((prev) => ({
+                ...prev,
+                quantity: event.target.value,
+              }))
+            }
+          />
+          <input
+            placeholder="Unit"
+            value={ingredientDraft.unit}
+            onChange={(event) =>
+              setIngredientDraft((prev) => ({
+                ...prev,
+                unit: event.target.value,
+              }))
+            }
+          />
+          <Button className="ghost" onClick={handleAddIngredient}>
+            Add
+          </Button>
+        </div>
       </div>
 
       <div className="chip-list">
@@ -167,7 +170,7 @@ export const MealsList: React.FC = () => {
     <section className="panel">
       <div className="panel-head">
         <h2>Meals</h2>
-        <p>Save go-to recipes with ingredients and measurements.</p>
+        <p>Save your favorite recipes with ingredients and measurements.</p>
       </div>
 
       <div className="meal-grid">

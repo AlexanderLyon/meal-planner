@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { supabase } from '@utils/supabase';
 import { useHousehold } from '@context/useHousehold';
 import { Button } from '@components/button';
@@ -37,7 +37,7 @@ export const IngredientList: React.FC = () => {
     <section className="panel">
       <div className="panel-head">
         <h2>Ingredients</h2>
-        <p>Keep a shared ingredient list with preferred stores.</p>
+        <p>List your most-used ingredients with preferred stores.</p>
       </div>
 
       <div className="meal-grid">

@@ -28,7 +28,7 @@ export const ShareCode: React.FC = () => {
         {household.id} <button onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
       </span>
       <p className="muted">Share this code to invite others.</p>
-      <Button onClick={leaveHousehold}>Change current household</Button>
+      <Button onClick={leaveHousehold}>Log out of current household</Button>
     </div>
   );
 };

@@ -10,7 +10,7 @@ export const WeeklyPlan: React.FC = () => {
     <section className="panel">
       <div className="panel-head">
         <h2>Meal plan</h2>
-        <p>Assign meals to each day and add notes like leftovers night.</p>
+        <p>Assign meals to each day and add custom notes.</p>
       </div>
 
       <div className="plan-grid">

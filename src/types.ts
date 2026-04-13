@@ -18,9 +18,12 @@ export type Meal = {
 };
 
 export type MealPlanDay = {
-  day: string;
-  mealId: string;
-  note: string;
+  mealId?: string;
+  note?: string;
+};
+
+export type WeeklyMealPlan = {
+  [day: string]: MealPlanDay;
 };
 
 export type IngredientItem = {

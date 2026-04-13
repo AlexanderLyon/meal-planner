@@ -26,6 +26,12 @@ nav {
   gap: 1.5rem;
 }
 
+nav a.active {
+  font-weight: bold;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.25em;

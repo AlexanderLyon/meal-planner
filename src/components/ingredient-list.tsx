@@ -9,17 +9,20 @@ export const IngredientList: React.FC = () => {
   const { ingredients, refresh } = useMeals();
   const [pantryDraft, setPantryDraft] = useState({
     name: '',
+    preferredBrand: '',
     preferredStore: '',
   });
 
   const handleAddIngredientItem = async () => {
     const name = pantryDraft.name.trim();
     const preferredStore = pantryDraft.preferredStore.trim();
+    const preferredBrand = pantryDraft.preferredBrand.trim();
     const { data, error } = await supabase
       .from('ingredients')
       .insert({
         household_id: household?.id,
         name,
+        preferred_brand: preferredBrand,
         preferred_store: preferredStore,
       })
       .select()
@@ -28,7 +31,7 @@ export const IngredientList: React.FC = () => {
     if (error) {
       console.error(error);
     } else if (data) {
-      setPantryDraft({ name: '', preferredStore: '' });
+      setPantryDraft({ name: '', preferredBrand: '', preferredStore: '' });
       refresh(); // Refresh the list after adding
     }
   };
@@ -56,6 +59,19 @@ export const IngredientList: React.FC = () => {
             />
           </div>
           <div>
+            <label className="label">Preferred brand</label>
+            <input
+              placeholder="Rummo"
+              value={pantryDraft.preferredBrand}
+              onChange={(event) =>
+                setPantryDraft((prev) => ({
+                  ...prev,
+                  preferredBrand: event.target.value,
+                }))
+              }
+            />
+          </div>
+          <div>
             <label className="label">Preferred store</label>
             <input
               placeholder="Local market"
@@ -71,7 +87,7 @@ export const IngredientList: React.FC = () => {
           <Button
             className="primary"
             onClick={handleAddIngredientItem}
-            disabled={!pantryDraft.name || !pantryDraft.preferredStore}
+            disabled={!pantryDraft.name}
           >
             Add ingredient
           </Button>

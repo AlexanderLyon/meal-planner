@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useMeals } from '@/context/mealsProvider';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 export const WeeklyPlan: React.FC = () => {
-  const { meals, weeklyMeals, updateMealForDay } = useMeals();
+  const { meals, weeklyMeals, updateMealForDay, savingMealPlanForDay } = useMeals();
+  const timerRef = useRef<{ [key: string]: ReturnType<typeof setTimeout> }>({});
+
+  const saveDay = (day: string, data: { mealId?: string; note?: string }): void => {
+    if (timerRef.current[day]) {
+      clearTimeout(timerRef.current[day]);
+    }
+    if (
+      (data.note != null && data.note !== weeklyMeals[day]?.note) ||
+      (data.mealId != null && data.mealId !== weeklyMeals[day]?.mealId)
+    ) {
+      updateMealForDay(day, data);
+    }
+  };
 
   return (
     <section className="panel">
@@ -19,10 +32,15 @@ export const WeeklyPlan: React.FC = () => {
           return (
             <div key={day} className="plan-card">
               <div className="plan-title">
-                <h3>{day}</h3>
+                <div className="flex space-between">
+                  <h3>{day}</h3>
+                  {savingMealPlanForDay.includes(day) && <img src="/90-ring.svg" alt="Saving..." />}
+                </div>
                 <select
                   value={plan.mealId}
-                  onChange={(event) => updateMealForDay(day, { mealId: event.target.value })}
+                  onChange={(event) => {
+                    saveDay(day, { mealId: event.target.value });
+                  }}
                 >
                   <option value="">Choose a meal</option>
                   {meals.map((meal) => (
@@ -35,7 +53,17 @@ export const WeeklyPlan: React.FC = () => {
               <textarea
                 placeholder="Add a note"
                 defaultValue={plan.note}
-                onBlur={(event) => updateMealForDay(day, { note: event.target.value })}
+                onBlur={(event) => {
+                  saveDay(day, { note: event.target.value });
+                }}
+                onChange={(event) => {
+                  if (timerRef.current[day]) {
+                    clearTimeout(timerRef.current[day]);
+                  }
+                  timerRef.current[day] = setTimeout(() => {
+                    updateMealForDay(day, { note: event.target.value });
+                  }, 2000);
+                }}
               />
             </div>
           );

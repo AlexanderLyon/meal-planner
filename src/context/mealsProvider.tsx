@@ -6,6 +6,7 @@ type MealsContextValue = {
   meals: Meal[];
   ingredients: IngredientItem[];
   weeklyMeals: WeeklyMealPlan;
+  savingMealPlanForDay: string[];
   loading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
@@ -34,6 +35,7 @@ export function MealsProvider({
   const [meals, setMeals] = useState<Meal[]>([]);
   const [ingredients, setIngredients] = useState<IngredientItem[]>([]);
   const [weeklyMeals, setWeeklyMeals] = useState<WeeklyMealPlan>(initialMealPlan);
+  const [savingMealPlanForDay, setSavingMealPlanForDay] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -79,24 +81,35 @@ export function MealsProvider({
   const updateMealForDay = useCallback(
     async (day: string, { mealId, note }: MealPlanDay) => {
       if (!household) return;
+      setSavingMealPlanForDay((prev) => [...prev, day]);
+      let updatedPlan: WeeklyMealPlan;
 
-      const updatedPlan = {
-        ...weeklyMeals,
-        [day]: {
-          ...weeklyMeals[day],
-          mealId: mealId ?? weeklyMeals[day].mealId,
-          note: note ?? weeklyMeals[day].note,
-        },
-      };
-      setWeeklyMeals(updatedPlan);
+      try {
+        updatedPlan = {
+          ...weeklyMeals,
+          [day]: {
+            ...weeklyMeals[day],
+            mealId: mealId ?? weeklyMeals[day].mealId,
+            note: note ?? weeklyMeals[day].note,
+          },
+        };
 
-      const { error: upsertError } = await supabase
-        .from('weekly_plans')
-        .upsert({ household_id: household.id, plan: updatedPlan }, { onConflict: 'household_id' });
+        const { error: upsertError } = await supabase
+          .from('weekly_plans')
+          .upsert(
+            { household_id: household.id, plan: updatedPlan },
+            { onConflict: 'household_id' }
+          );
 
-      if (upsertError) {
-        setError(upsertError.message);
-        setWeeklyMeals(weeklyMeals);
+        if (upsertError) {
+          setError(upsertError.message);
+        } else {
+          setWeeklyMeals(updatedPlan);
+        }
+      } catch (error) {
+        setError((error as Error).message);
+      } finally {
+        setSavingMealPlanForDay((prev) => prev.filter((d) => d !== day));
       }
     },
     [household, weeklyMeals]
@@ -111,12 +124,22 @@ export function MealsProvider({
       meals,
       ingredients,
       weeklyMeals,
+      savingMealPlanForDay,
       loading,
       error,
       refresh: fetchData,
       updateMealForDay,
     }),
-    [meals, ingredients, weeklyMeals, loading, error, fetchData, updateMealForDay]
+    [
+      meals,
+      ingredients,
+      weeklyMeals,
+      loading,
+      error,
+      fetchData,
+      updateMealForDay,
+      savingMealPlanForDay,
+    ]
   );
 
   return <MealsContext.Provider value={value}>{children}</MealsContext.Provider>;

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router';
 import { Button } from '@components/button';
 import { useHousehold } from '@context/useHousehold';
 
@@ -10,6 +11,7 @@ const OnboardingMode = {
 type OnboardingMode = (typeof OnboardingMode)[keyof typeof OnboardingMode];
 
 export const Onboarding: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const { joinHouseholdById, createHousehold } = useHousehold();
   const [onboardingMode, setOnboardingMode] = useState<OnboardingMode>(OnboardingMode.Create);
   const [householdName, setHouseholdName] = useState('');
@@ -22,6 +24,13 @@ export const Onboarding: React.FC = () => {
   const handleJoinHousehold = async () => {
     await joinHouseholdById(joinCode.trim());
   };
+
+  useEffect(() => {
+    if (searchParams.get('code')) {
+      setOnboardingMode(OnboardingMode.Join);
+      setJoinCode(searchParams.get('code') || '');
+    }
+  }, [searchParams, setJoinCode, setOnboardingMode]);
 
   return (
     <>

@@ -36,6 +36,22 @@ export const IngredientList: React.FC = () => {
     }
   };
 
+  const handleDeleteIngredient = async (ingredientId: string, ingredientName: string) => {
+    if (
+      !confirm(`Are you sure you want to delete "${ingredientName}"? This action cannot be undone.`)
+    ) {
+      return;
+    }
+
+    const { error } = await supabase.from('ingredients').delete().eq('id', ingredientId);
+
+    if (error) {
+      console.error('Error deleting ingredient:', error);
+    } else {
+      refresh();
+    }
+  };
+
   return (
     <section className="panel">
       <div className="panel-head">
@@ -96,6 +112,13 @@ export const IngredientList: React.FC = () => {
         <div className="ingredient-list">
           {ingredients.map((item) => (
             <article key={item.id} className="card ingredient-card">
+              <button
+                onClick={() => handleDeleteIngredient(item.id, item.name)}
+                className="ingredient-card__delete"
+                title="Delete ingredient"
+              >
+                ✕
+              </button>
               <h3>{item.name}</h3>
               {item.preferred_brand && (
                 <p className="muted">Preferred brand: {item.preferred_brand}</p>

@@ -35,7 +35,7 @@ const NewMealForm = ({ onMealAdded }: { onMealAdded?: () => void }) => {
 
   const handleAddMeal = async () => {
     const name = mealName.trim();
-    if (!name || mealIngredients.length === 0 || !household) return;
+    if (!name || !household) return;
 
     try {
       const { error } = await supabase.from('meals').insert({
@@ -132,11 +132,7 @@ const NewMealForm = ({ onMealAdded }: { onMealAdded?: () => void }) => {
         />
       </div>
 
-      <Button
-        className="primary"
-        onClick={handleAddMeal}
-        disabled={!mealName.trim() || mealIngredients.length === 0 || !household}
-      >
+      <Button className="primary" onClick={handleAddMeal} disabled={!mealName.trim() || !household}>
         Save meal
       </Button>
     </div>

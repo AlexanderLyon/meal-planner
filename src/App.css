@@ -308,6 +308,16 @@ textarea {
   color: var(--muted);
 }
 
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.my-1 {
+  margin: 0.75rem 0;
+}
+
 @media (max-width: 900px) {
   .meal-grid {
     grid-template-columns: 1fr;

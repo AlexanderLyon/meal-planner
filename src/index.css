@@ -10,8 +10,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --accent: #2f6bff;
+  --accent: #4975e2;
   --muted: #64748b;
+  --pale-green: #f0faf0;
+  --succulent: #75a375;
   --border: rgba(15, 23, 42, 0.12);
   --panel: rgba(255, 255, 255, 0.82);
   --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.08);
@@ -46,4 +48,8 @@ button {
 
 .space-between {
   justify-content: space-between;
+}
+
+.muted {
+  color: var(--muted);
 }

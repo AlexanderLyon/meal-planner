@@ -95,7 +95,7 @@ export const IngredientList: React.FC = () => {
 
         <div className="ingredient-list">
           {ingredients.map((item) => (
-            <article key={item.id} className="meal-card">
+            <article key={item.id} className="card ingredient-card">
               <h3>{item.name}</h3>
               {item.preferred_brand && (
                 <p className="muted">Preferred brand: {item.preferred_brand}</p>

@@ -25,7 +25,10 @@ export const ShareCode: React.FC = () => {
     <div className="household-card">
       <strong className="household-label">{household.name}</strong>
       <span className="household-code">
-        {household.id} <button onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
+        {household.id}{' '}
+        <Button className="compact ghost" onClick={handleCopy}>
+          {isCopied ? 'Copied!' : 'Copy'}
+        </Button>
       </span>
       <p className="muted">Share this code to invite others.</p>
       <Button onClick={leaveHousehold}>Log out of current household</Button>

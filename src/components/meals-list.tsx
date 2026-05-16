@@ -71,7 +71,7 @@ const NewMealForm = ({ onMealAdded }: { onMealAdded?: () => void }) => {
       </div>
 
       <div>
-        <label className="label">Ingredients List</label>
+        <label className="label">Ingredients Required</label>
         <div className="ingredient-row">
           <input
             placeholder="Ingredient"
@@ -147,7 +147,7 @@ const SavedMeals = ({ meals }: { meals: Meal[] }) => {
   return (
     <div className="meal-list">
       {meals.map((meal) => (
-        <div key={meal.id} className="meal-card">
+        <div key={meal.id} className="card meal-card">
           <h3>{meal.name}</h3>
           <ul>
             {meal.ingredients.map((ingredient) => (

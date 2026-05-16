@@ -156,35 +156,6 @@ textarea {
   min-height: 80px;
 }
 
-button {
-  font-family: inherit;
-}
-
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.primary {
-  background: var(--accent);
-  border: none;
-  color: #fff;
-  padding: 0.75rem 1.25rem;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: var(--shadow-soft);
-}
-
-.ghost {
-  background: #fff;
-  border: 1px dashed var(--border);
-  border-radius: 12px;
-  padding: 0.75rem 0.9rem;
-  cursor: pointer;
-  color: var(--muted);
-}
-
 .pill {
   display: inline-flex;
   padding: 0.35rem 0.75rem;
@@ -250,12 +221,15 @@ button:disabled {
   gap: 1rem;
 }
 
-.meal-card {
+.card {
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 1rem 1.25rem;
   box-shadow: var(--shadow-soft);
+}
+
+.meal-card {
+  padding: 1rem 1.25rem;
 }
 
 .meal-card h3 {
@@ -266,6 +240,15 @@ button:disabled {
   margin: 0;
   padding-left: 1rem;
   color: var(--muted);
+}
+
+.ingredient-card {
+  padding: 0.5rem 1.25rem;
+}
+
+.ingredient-card h3,
+.ingredient-card p {
+  margin: 0.5rem 0;
 }
 
 .plan-grid {
@@ -281,6 +264,18 @@ button:disabled {
   background: #fff;
   display: grid;
   gap: 0.75rem;
+}
+
+.plan-card.filled {
+  background: var(--pale-green);
+  border-style: solid;
+  border-color: var(--succulent);
+}
+
+.plan-card.empty {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--muted);
 }
 
 .plan-title {

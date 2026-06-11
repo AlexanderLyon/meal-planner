@@ -70,6 +70,17 @@ nav a.active {
   margin: 0.35rem 0;
 }
 
+.household-card .share-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.share-actions .share-btn {
+  padding: 5px 9px;
+}
+
 .panel {
   background: var(--panel);
   border-radius: 24px;

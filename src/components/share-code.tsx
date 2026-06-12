@@ -25,7 +25,7 @@ export const ShareCode: React.FC = () => {
   const [isCopied, setIsCopied] = useState(false);
   const shareData = {
     title: `Join ${household?.name || 'me'} on Meal Planner!`,
-    url: `http://localhost:5173?code=${household?.id}`,
+    url: `${window.location.origin}?code=${household?.id}`,
   };
 
   const handleShare = (): void => {

@@ -7,6 +7,12 @@
   gap: 2.5rem;
 }
 
+@media (max-width: 700px) {
+  .app {
+    padding: 1.5rem 1rem 3rem;
+  }
+}
+
 .app-header {
   display: flex;
   flex-wrap: wrap;
@@ -21,15 +27,45 @@
   letter-spacing: -0.03em;
 }
 
-nav {
-  display: flex;
-  gap: 1.5rem;
+.navigation-shell {
+  position: relative;
 }
 
-nav a.active {
+.navigation {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.navigation a {
+  color: inherit;
+}
+
+.navigation a.active {
   font-weight: bold;
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+
+.nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-direction: column;
+}
+
+.nav-toggle__bar {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 999px;
 }
 
 .eyebrow {
@@ -95,6 +131,18 @@ nav a.active {
   align-items: baseline;
   gap: 1.5rem;
   margin-bottom: 1.5rem;
+}
+
+@media (max-width: 700px) {
+  .panel {
+    padding: 1rem;
+  }
+
+  .panel-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 }
 
 .panel-head h2 {
@@ -355,5 +403,43 @@ textarea {
 
   .household-card {
     text-align: left;
+  }
+}
+
+@media (max-width: 700px) {
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .navigation {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 180px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: white;
+    box-shadow: var(--shadow-soft);
+    padding: 0.4rem;
+    z-index: 20;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: stretch;
+  }
+
+  .navigation.is-open {
+    display: flex;
+  }
+
+  .navigation a {
+    text-decoration: none;
+    padding: 0.5rem 0.65rem;
+    border-radius: 8px;
+  }
+
+  .navigation a.active {
+    background: rgba(56, 120, 255, 0.12);
+    text-decoration: none;
   }
 }

@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation } from 'react-router';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router';
 import { HouseholdProvider } from '@context/householdProvider';
 import { Onboarding } from '@components/onboarding';
 import { MealsList } from '@components/meals-list';
@@ -9,6 +9,7 @@ import { ShareCode } from '@components/share-code';
 import { IngredientList } from '@components/ingredient-list';
 import { useHousehold } from '@/context/useHousehold';
 import { MealsProvider } from '@/context/mealsProvider';
+import { NavigationMenu } from '@components/navigation-menu';
 
 function App() {
   const { household } = useHousehold();
@@ -35,12 +36,7 @@ function App() {
         <div>
           <p className="eyebrow">Meal Planner</p>
         </div>
-        <nav className="navigation">
-          <NavLink to="/weekly-plan">This Week</NavLink>
-          <NavLink to="/meals">Meals</NavLink>
-          <NavLink to="/ingredients">Ingredients</NavLink>
-          <NavLink to="/shopping">Shopping List</NavLink>
-        </nav>
+        <NavigationMenu />
       </header>
       <main className="dashboard">
         <Routes>

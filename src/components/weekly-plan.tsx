@@ -1,13 +1,14 @@
 import React, { useRef } from 'react';
 import { Button } from '@components/button';
 import { useMeals } from '@/context/mealsProvider';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 export const WeeklyPlan: React.FC = () => {
   const { meals, weeklyMeals, updateMealForDay, savingMealPlanForDay } = useMeals();
   const timerRef = useRef<{ [key: string]: ReturnType<typeof setTimeout> }>({});
+  const navigate = useNavigate();
 
   const saveDay = (day: string, data: { mealId?: string; note?: string }): void => {
     if (timerRef.current[day]) {
@@ -56,16 +57,27 @@ export const WeeklyPlan: React.FC = () => {
                 </div>
                 <select
                   value={plan.mealId}
+                  disabled={savingMealPlanForDay.includes(day)}
                   onChange={(event) => {
-                    saveDay(day, { mealId: event.target.value });
+                    if (event.target.value === 'new-meal') {
+                      // Redirect to meals page to create a new entry
+                      navigate('/meals');
+                    } else {
+                      saveDay(day, { mealId: event.target.value });
+                    }
                   }}
                 >
                   <option value="">Choose a meal</option>
-                  {meals.map((meal) => (
-                    <option key={meal.id} value={meal.id}>
-                      {meal.name}
-                    </option>
-                  ))}
+                  <optgroup label="Saved Meals">
+                    {meals.map((meal) => (
+                      <option key={meal.id} value={meal.id}>
+                        {meal.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="New Meal">
+                    <option value="new-meal">+ Add a new meal</option>
+                  </optgroup>
                 </select>
               </div>
               <textarea

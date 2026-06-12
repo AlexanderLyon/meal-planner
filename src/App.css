@@ -124,6 +124,21 @@
   padding: 5px 9px;
 }
 
+.share-actions .share-btn svg {
+  flex-shrink: 0;
+}
+
+.share-actions__secondary {
+  display: flex;
+  flex-grow: 1;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.share-actions__logout {
+  flex-grow: 1;
+}
+
 .panel {
   background: var(--panel);
   border-radius: var(--card-border-radius);
@@ -212,7 +227,7 @@ textarea {
   border-radius: 12px;
   border: 1px solid var(--border);
   padding: 0.75rem 0.9rem;
-  font-family: inherit;
+  font-family: 16px;
   font-size: 0.95rem;
   background: #fff;
 }

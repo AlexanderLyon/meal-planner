@@ -54,15 +54,19 @@ export const ShareCode: React.FC = () => {
       <span className="household-code">{household.id} </span>
       <p className="muted">Share this code to invite others.</p>
       <span className="share-actions">
-        {navigator.canShare(shareData) && (
-          <Button className="ghost share-btn" onClick={handleShare}>
-            <ShareIcon /> Share invite link
+        <span className="share-actions__secondary">
+          {navigator.canShare(shareData) && (
+            <Button className="ghost share-btn" onClick={handleShare}>
+              <ShareIcon /> Share invite link
+            </Button>
+          )}
+          <Button className="ghost" onClick={handleCopy}>
+            {isCopied ? 'Copied to clipboard!' : 'Copy share code'}
           </Button>
-        )}
-        <Button className="ghost" onClick={handleCopy}>
-          {isCopied ? 'Copied to clipboard!' : 'Copy share code'}
+        </span>
+        <Button className="share-actions__logout" onClick={leaveHousehold}>
+          Log out of current household
         </Button>
-        <Button onClick={leaveHousehold}>Log out of current household</Button>
       </span>
     </div>
   );

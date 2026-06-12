@@ -43,7 +43,7 @@ export const Onboarding: React.FC = () => {
 
       <section className="panel onboarding">
         <div className="panel-head">
-          <h2>Welcome home</h2>
+          <h2>Get Started</h2>
           <p>Start fresh or join a household already in progress.</p>
         </div>
 
@@ -72,7 +72,11 @@ export const Onboarding: React.FC = () => {
                 onChange={(event) => setHouseholdName(event.target.value)}
               />
             </div>
-            <Button className="primary" onClick={() => handleCreateHousehold(householdName)}>
+            <Button
+              className="primary"
+              disabled={!householdName.trim()}
+              onClick={() => handleCreateHousehold(householdName)}
+            >
               Create and get code
             </Button>
           </div>
@@ -86,7 +90,7 @@ export const Onboarding: React.FC = () => {
                 onChange={(event) => setJoinCode(event.target.value)}
               />
             </div>
-            <Button className="primary" onClick={handleJoinHousehold}>
+            <Button className="primary" disabled={!joinCode.trim()} onClick={handleJoinHousehold}>
               Join household
             </Button>
           </div>

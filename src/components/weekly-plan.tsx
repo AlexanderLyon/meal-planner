@@ -10,6 +10,9 @@ export const WeeklyPlan: React.FC = () => {
   const { meals, weeklyMeals, updateMealForDay, savingMealPlanForDay, loading } = useMeals();
   const timerRef = useRef<{ [key: string]: ReturnType<typeof setTimeout> }>({});
   const navigate = useNavigate();
+  const todayName: string = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(
+    new Date()
+  );
 
   const saveDay = (day: string, data: { mealId?: string; note?: string }): void => {
     if (timerRef.current[day]) {
@@ -38,12 +41,19 @@ export const WeeklyPlan: React.FC = () => {
         {daysOfWeek.map((day) => {
           const plan = weeklyMeals[day] || { mealId: '', note: '' };
           const isEmpty = !plan.mealId && !plan.note;
+          const isToday = day === todayName;
 
           return (
-            <div key={day} className={`plan-card ${isEmpty ? ' empty' : 'filled'}`}>
+            <div
+              key={day}
+              className={`plan-card ${isEmpty ? ' empty' : 'filled'}${isToday ? ' today' : ''}`}
+            >
               <div className="plan-title">
                 <div className="flex space-between">
-                  <h3>{day}</h3>
+                  <div className="plan-day-heading">
+                    <h3>{day}</h3>
+                    {isToday ? <span className="today-badge">Today</span> : null}
+                  </div>
                   {savingMealPlanForDay.includes(day) ? (
                     <img src="/90-ring.svg" alt="Saving..." />
                   ) : plan.mealId || plan.note?.length ? (

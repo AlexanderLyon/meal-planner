@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router';
+import { Button } from '@components/button';
 
 export const NavigationMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="navigation-shell">
-      <button
+      <Button
         type="button"
-        className="nav-toggle"
+        className="ghost nav-toggle"
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-controls="main-navigation"
@@ -29,7 +30,7 @@ export const NavigationMenu: React.FC = () => {
           <path d="M4 12l16 0" />
           <path d="M4 18l16 0" />
         </svg>
-      </button>
+      </Button>
 
       <nav id="main-navigation" className={`navigation ${isOpen ? 'is-open' : ''}`}>
         <NavLink to="/weekly-plan" onClick={() => setIsOpen(false)}>

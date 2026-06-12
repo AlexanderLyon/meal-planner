@@ -234,6 +234,29 @@ textarea {
   gap: 2rem;
 }
 
+.filter-input {
+  position: relative;
+}
+
+.filter-input svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.filter-input input[type='search'] {
+  padding-left: 35px;
+}
+
+.search-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .meal-grid {
   display: grid;
   grid-template-columns: minmax(280px, 1fr) minmax(280px, 1.4fr);

@@ -147,28 +147,63 @@ const SavedMeals = ({
   meals: Meal[];
   onDelete: (id: string, name: string) => void;
 }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+
   return (
-    <div className="meal-list">
-      {meals.map((meal) => (
-        <div key={meal.id} className="card meal-card">
-          <button
-            onClick={() => onDelete(meal.id, meal.name)}
-            className="delete-button"
-            title="Delete meal"
-          >
-            ✕
-          </button>
-          <h3>{meal.name}</h3>
-          <ul>
-            {meal.ingredients.map((ingredient) => (
-              <li key={ingredient.id}>
-                {ingredient.name} · {ingredient.quantity} {ingredient.unit}
-              </li>
-            ))}
-          </ul>
-          {meal.instructions && <p>{meal.instructions}</p>}
-        </div>
-      ))}
+    <div className="search-wrapper">
+      <div className="filter-input">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M11.36 20.213l-2.36 .787v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414" />
+          <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+          <path d="M20.2 20.2l1.8 1.8" />
+        </svg>
+        <input
+          type="search"
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+          placeholder="Filter meals"
+        />
+      </div>
+      <div className="meal-list">
+        {meals.map((meal) => {
+          if (
+            searchTerm?.trim()?.length &&
+            !meal.name.toLowerCase().includes(searchTerm.toLowerCase())
+          ) {
+            return;
+          }
+          return (
+            <div key={meal.id} className="card meal-card">
+              <button
+                onClick={() => onDelete(meal.id, meal.name)}
+                className="delete-button"
+                title="Delete meal"
+              >
+                ✕
+              </button>
+              <h3>{meal.name}</h3>
+              <ul>
+                {meal.ingredients.map((ingredient) => (
+                  <li key={ingredient.id}>
+                    {ingredient.name} · {ingredient.quantity} {ingredient.unit}
+                  </li>
+                ))}
+              </ul>
+              {meal.instructions && <p>{meal.instructions}</p>}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

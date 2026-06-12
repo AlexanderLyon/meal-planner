@@ -50,12 +50,12 @@ export function MealsProvider({
         .from('meals')
         .select('*')
         .eq('household_id', household.id)
-        .order('id', { ascending: true }),
+        .order('name', { ascending: true }),
       supabase
         .from('ingredients')
         .select('*')
         .eq('household_id', household.id)
-        .order('id', { ascending: true }),
+        .order('name', { ascending: true }),
       supabase.from('weekly_plans').select('*').eq('household_id', household.id),
     ]);
 

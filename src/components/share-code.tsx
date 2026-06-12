@@ -56,7 +56,7 @@ export const ShareCode: React.FC = () => {
       <span className="share-actions">
         {navigator.canShare(shareData) && (
           <Button className="ghost share-btn" onClick={handleShare}>
-            <ShareIcon />
+            <ShareIcon /> Share invite link
           </Button>
         )}
         <Button className="ghost" onClick={handleCopy}>

@@ -118,6 +118,9 @@
 }
 
 .share-actions .share-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   padding: 5px 9px;
 }
 

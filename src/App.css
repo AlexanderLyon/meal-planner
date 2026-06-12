@@ -13,6 +13,10 @@
   }
 }
 
+.react-loading-skeleton.skeleton-loader {
+  border-radius: var(--card-border-radius);
+}
+
 .app-header {
   display: flex;
   flex-wrap: wrap;
@@ -119,7 +123,7 @@
 
 .panel {
   background: var(--panel);
-  border-radius: 24px;
+  border-radius: var(--card-border-radius);
   padding: 2rem;
   border: 1px solid var(--border);
   box-shadow: var(--shadow-soft);

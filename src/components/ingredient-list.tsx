@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { supabase } from '@utils/supabase';
 import { useHousehold } from '@context/useHousehold';
 import { Button } from '@components/button';
+import { SkeletonLoader } from '@components/skeleton-loader';
 import { useMeals } from '@context/mealsProvider';
 
 export const IngredientList: React.FC = () => {
   const { household } = useHousehold();
-  const { ingredients, refresh } = useMeals();
+  const { ingredients, refresh, loading } = useMeals();
   const [pantryDraft, setPantryDraft] = useState({
     name: '',
     preferredBrand: '',
@@ -51,6 +52,10 @@ export const IngredientList: React.FC = () => {
       refresh();
     }
   };
+
+  if (loading) {
+    return <SkeletonLoader height={500} />;
+  }
 
   return (
     <section className="panel">

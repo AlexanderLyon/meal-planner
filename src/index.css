@@ -17,6 +17,7 @@
   --border: rgba(15, 23, 42, 0.12);
   --panel: rgba(255, 255, 255, 0.82);
   --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.08);
+  --card-border-radius: 24px;
 }
 
 * {

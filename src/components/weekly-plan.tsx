@@ -1,12 +1,13 @@
 import React, { useRef } from 'react';
 import { Button } from '@components/button';
+import { SkeletonLoader } from '@components/skeleton-loader';
 import { useMeals } from '@/context/mealsProvider';
 import { NavLink, useNavigate } from 'react-router';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 export const WeeklyPlan: React.FC = () => {
-  const { meals, weeklyMeals, updateMealForDay, savingMealPlanForDay } = useMeals();
+  const { meals, weeklyMeals, updateMealForDay, savingMealPlanForDay, loading } = useMeals();
   const timerRef = useRef<{ [key: string]: ReturnType<typeof setTimeout> }>({});
   const navigate = useNavigate();
 
@@ -21,6 +22,10 @@ export const WeeklyPlan: React.FC = () => {
       updateMealForDay(day, data);
     }
   };
+
+  if (loading) {
+    return <SkeletonLoader height={500} />;
+  }
 
   return (
     <section className="panel">

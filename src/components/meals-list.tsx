@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@components/button';
+import { SkeletonLoader } from '@components/skeleton-loader';
 import { useHousehold } from '@context/useHousehold';
 import { supabase } from '@utils/supabase';
 import type { Meal, MealIngredient } from '../types';
@@ -173,7 +174,7 @@ const SavedMeals = ({
 };
 
 export const MealsList: React.FC = () => {
-  const { meals, refresh } = useMeals();
+  const { meals, refresh, loading } = useMeals();
 
   const handleDeleteMeal = async (mealId: string, mealName: string) => {
     if (!confirm(`Are you sure you want to delete "${mealName}"? This action cannot be undone.`)) {
@@ -188,6 +189,10 @@ export const MealsList: React.FC = () => {
       refresh();
     }
   };
+
+  if (loading) {
+    return <SkeletonLoader height={500} />;
+  }
 
   return (
     <section className="panel">

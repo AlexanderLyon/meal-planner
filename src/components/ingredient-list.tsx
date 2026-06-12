@@ -114,7 +114,7 @@ export const IngredientList: React.FC = () => {
             <article key={item.id} className="card ingredient-card">
               <button
                 onClick={() => handleDeleteIngredient(item.id, item.name)}
-                className="ingredient-card__delete"
+                className="delete-button"
                 title="Delete ingredient"
               >
                 ✕

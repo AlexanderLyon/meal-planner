@@ -139,11 +139,24 @@ const NewMealForm = ({ onMealAdded }: { onMealAdded?: () => void }) => {
   );
 };
 
-const SavedMeals = ({ meals }: { meals: Meal[] }) => {
+const SavedMeals = ({
+  meals,
+  onDelete,
+}: {
+  meals: Meal[];
+  onDelete: (id: string, name: string) => void;
+}) => {
   return (
     <div className="meal-list">
       {meals.map((meal) => (
         <div key={meal.id} className="card meal-card">
+          <button
+            onClick={() => onDelete(meal.id, meal.name)}
+            className="delete-button"
+            title="Delete meal"
+          >
+            ✕
+          </button>
           <h3>{meal.name}</h3>
           <ul>
             {meal.ingredients.map((ingredient) => (
@@ -162,6 +175,20 @@ const SavedMeals = ({ meals }: { meals: Meal[] }) => {
 export const MealsList: React.FC = () => {
   const { meals, refresh } = useMeals();
 
+  const handleDeleteMeal = async (mealId: string, mealName: string) => {
+    if (!confirm(`Are you sure you want to delete "${mealName}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    const { error } = await supabase.from('meals').delete().eq('id', mealId);
+
+    if (error) {
+      console.error('Error deleting meal:', error);
+    } else {
+      refresh();
+    }
+  };
+
   return (
     <section className="panel">
       <div className="panel-head">
@@ -171,7 +198,7 @@ export const MealsList: React.FC = () => {
 
       <div className="meal-grid">
         <NewMealForm onMealAdded={refresh} />
-        <SavedMeals meals={meals} />
+        <SavedMeals meals={meals} onDelete={handleDeleteMeal} />
       </div>
     </section>
   );

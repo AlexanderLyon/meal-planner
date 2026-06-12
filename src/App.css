@@ -241,6 +241,7 @@ textarea {
 
 .meal-card {
   padding: 1rem 1.25rem;
+  position: relative;
 }
 
 .meal-card h3 {
@@ -258,7 +259,8 @@ textarea {
   position: relative;
 }
 
-.ingredient-card__delete {
+/* Used for ingredient cards and meal cards */
+.delete-button {
   position: absolute;
   top: 10px;
   right: 8px;
@@ -266,7 +268,7 @@ textarea {
   background: none;
   border: none;
   font-size: 16px;
-  cursor: 'pointer';
+  cursor: pointer;
   color: var(--muted);
 }
 

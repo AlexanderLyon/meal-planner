@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useHousehold } from '@context/useHousehold';
-import { Button } from '@components/button';
+import { Card } from '@components/Card';
+import { Button } from '@components/Button';
 
 const ShareIcon = () => (
   <svg
@@ -49,25 +50,27 @@ export const ShareCode: React.FC = () => {
   if (!household) return null;
 
   return (
-    <div className="household-card">
-      <strong className="household-label">{household.name}</strong>
-      <span className="household-code">{household.id} </span>
-      <p className="muted">Share this code to invite others.</p>
-      <span className="share-actions">
-        <span className="share-actions__secondary">
-          {navigator.canShare(shareData) && (
-            <Button className="ghost share-btn" onClick={handleShare}>
-              <ShareIcon /> Share invite link
+    <Card>
+      <div className="household-card">
+        <strong className="household-label">{household.name}</strong>
+        <span className="household-code">{household.id} </span>
+        <p className="muted">Share this code to invite others.</p>
+        <span className="share-actions">
+          <span className="share-actions__secondary">
+            {navigator.canShare(shareData) && (
+              <Button className="ghost share-btn" onClick={handleShare}>
+                <ShareIcon /> Share invite link
+              </Button>
+            )}
+            <Button className="ghost" onClick={handleCopy}>
+              {isCopied ? 'Copied to clipboard!' : 'Copy share code'}
             </Button>
-          )}
-          <Button className="ghost" onClick={handleCopy}>
-            {isCopied ? 'Copied to clipboard!' : 'Copy share code'}
+          </span>
+          <Button className="share-actions__logout" onClick={leaveHousehold}>
+            Log out of current household
           </Button>
         </span>
-        <Button className="share-actions__logout" onClick={leaveHousehold}>
-          Log out of current household
-        </Button>
-      </span>
-    </div>
+      </div>
+    </Card>
   );
 };

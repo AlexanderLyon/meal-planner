@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router';
-import { Button } from '@components/button';
+import { Button } from '@components/Button';
 
 export const NavigationMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@components/button';
+import { Card } from '@components/Card';
+import { Button } from '@components/Button';
 import { SkeletonLoader } from '@components/skeleton-loader';
 import { useHousehold } from '@context/useHousehold';
 import { supabase } from '@utils/supabase';
@@ -183,7 +184,7 @@ const SavedMeals = ({
             return;
           }
           return (
-            <div key={meal.id} className="card meal-card">
+            <Card key={meal.id} condensed className="meal-card">
               <button
                 onClick={() => onDelete(meal.id, meal.name)}
                 className="delete-button"
@@ -200,7 +201,7 @@ const SavedMeals = ({
                 ))}
               </ul>
               {meal.instructions && <p>{meal.instructions}</p>}
-            </div>
+            </Card>
           );
         })}
       </div>
@@ -230,16 +231,11 @@ export const MealsList: React.FC = () => {
   }
 
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <h2>Meals</h2>
-        <p>Save your favorite recipes with ingredients and measurements.</p>
-      </div>
-
+    <Card title="Meals" subtitle="Save your favorite recipes with ingredients and measurements.">
       <div className="meal-grid">
         <NewMealForm onMealAdded={refresh} />
         <SavedMeals meals={meals} onDelete={handleDeleteMeal} />
       </div>
-    </section>
+    </Card>
   );
 };

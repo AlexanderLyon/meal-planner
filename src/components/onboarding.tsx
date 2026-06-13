@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router';
-import { Button } from '@components/button';
+import { Card } from '@components/Card';
+import { Button } from '@components/Button';
 import { useHousehold } from '@context/useHousehold';
 
 const OnboardingMode = {
@@ -41,12 +42,11 @@ export const Onboarding: React.FC = () => {
         </p>
       </div>
 
-      <section className="panel onboarding">
-        <div className="panel-head">
-          <h2>Get Started</h2>
-          <p>Start fresh or join a household already in progress.</p>
-        </div>
-
+      <Card
+        title="Get Started"
+        subtitle="Start fresh or join a household already in progress."
+        className="onboarding"
+      >
         <div className="toggle">
           <Button
             className={onboardingMode === OnboardingMode.Create ? 'active' : ''}
@@ -95,7 +95,7 @@ export const Onboarding: React.FC = () => {
             </Button>
           </div>
         )}
-      </section>
+      </Card>
     </>
   );
 };

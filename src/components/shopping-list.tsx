@@ -1,11 +1,9 @@
+import { Card } from '@components/Card';
+
 export const ShoppingList: React.FC = () => {
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <h2>Shopping list</h2>
-        <p>Generate a shopping list for this week's meals.</p>
-      </div>
+    <Card title="Shopping list" subtitle="Generate a shopping list for this week's meals.">
       <p className="muted">Coming soon</p>
-    </section>
+    </Card>
   );
 };

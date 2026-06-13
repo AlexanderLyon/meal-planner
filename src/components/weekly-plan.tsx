@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { Button } from '@components/button';
+import { Card } from '@components/Card';
+import { Button } from '@components/Button';
 import { SkeletonLoader } from '@components/skeleton-loader';
 import { useMeals } from '@/context/mealsProvider';
 import { NavLink, useNavigate } from 'react-router';
@@ -31,12 +32,7 @@ export const WeeklyPlan: React.FC = () => {
   }
 
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <h2>Meal plan</h2>
-        <p>Assign meals to each day and add custom notes.</p>
-      </div>
-
+    <Card title="Meal plan" subtitle="Assign meals to each day and add custom notes.">
       <div className="plan-grid">
         {daysOfWeek.map((day) => {
           const plan = weeklyMeals[day] || { mealId: '', note: '' };
@@ -119,6 +115,6 @@ export const WeeklyPlan: React.FC = () => {
           <Button className="ghost">+ Add a new meal</Button>
         </NavLink>
       </div>
-    </section>
+    </Card>
   );
 };

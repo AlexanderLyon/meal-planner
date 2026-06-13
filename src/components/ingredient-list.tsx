@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { supabase } from '@utils/supabase';
 import { useHousehold } from '@context/useHousehold';
-import { Button } from '@components/button';
+import { Card } from '@components/Card';
+import { Button } from '@components/Button';
 import { SkeletonLoader } from '@components/skeleton-loader';
 import { useMeals } from '@context/mealsProvider';
 
@@ -59,12 +60,7 @@ export const IngredientList: React.FC = () => {
   }
 
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <h2>Ingredients</h2>
-        <p>List your most-used ingredients with preferred stores.</p>
-      </div>
-
+    <Card title="Ingredients" subtitle="List your most-used ingredients with preferred stores.">
       <div className="meal-grid">
         <div className="meal-form">
           <div>
@@ -149,7 +145,7 @@ export const IngredientList: React.FC = () => {
                 return;
               }
               return (
-                <article key={item.id} className="card ingredient-card">
+                <Card key={item.id} condensed className="ingredient-card">
                   <button
                     onClick={() => handleDeleteIngredient(item.id, item.name)}
                     className="delete-button"
@@ -164,12 +160,12 @@ export const IngredientList: React.FC = () => {
                   {item.preferred_store && (
                     <p className="muted">Preferred store: {item.preferred_store}</p>
                   )}
-                </article>
+                </Card>
               );
             })}
           </div>
         </div>
       </div>
-    </section>
+    </Card>
   );
 };

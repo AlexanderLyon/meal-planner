@@ -88,13 +88,7 @@
 }
 
 .household-card {
-  background: var(--panel);
-  padding: 1.5rem 2rem;
-  border-radius: 18px;
-  border: 1px solid var(--border);
-  min-width: 220px;
   text-align: right;
-  box-shadow: var(--shadow-soft);
 }
 
 .household-code {
@@ -137,44 +131,6 @@
 
 .share-actions__logout {
   flex-grow: 1;
-}
-
-.panel {
-  background: var(--panel);
-  border-radius: var(--card-border-radius);
-  padding: 2rem;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-soft);
-}
-
-.panel-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-@media (max-width: 700px) {
-  .panel {
-    padding: 1rem;
-  }
-
-  .panel-head {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-}
-
-.panel-head h2 {
-  margin: 0;
-  font-size: 1.7rem;
-}
-
-.panel-head p {
-  margin: 0;
-  color: var(--muted);
 }
 
 .onboarding {
@@ -325,19 +281,17 @@ textarea {
   gap: 1rem;
 }
 
-.card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  box-shadow: var(--shadow-soft);
+.meal-card,
+.ingredient-card {
+  position: relative;
 }
 
 .meal-card {
   padding: 1rem 1.25rem;
-  position: relative;
 }
 
-.meal-card h3 {
+.meal-card h3,
+.ingredient-card h3 {
   margin: 0 0 0.5rem;
 }
 
@@ -345,11 +299,6 @@ textarea {
   margin: 0;
   padding-left: 1rem;
   color: var(--muted);
-}
-
-.ingredient-card {
-  padding: 0.5rem 1.25rem;
-  position: relative;
 }
 
 /* Used for ingredient cards and meal cards */
@@ -363,11 +312,6 @@ textarea {
   font-size: 16px;
   cursor: pointer;
   color: var(--muted);
-}
-
-.ingredient-card h3,
-.ingredient-card p {
-  margin: 0.5rem 0;
 }
 
 .plan-grid {

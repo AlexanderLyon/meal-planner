@@ -15,6 +15,12 @@ export const IngredientList: React.FC = () => {
     preferredStore: '',
   });
   const [searchTerm, setSearchTerm] = useState('');
+  const [editingIngredientId, setEditingIngredientId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState({
+    name: '',
+    preferredBrand: '',
+    preferredStore: '',
+  });
 
   const handleAddIngredientItem = async () => {
     const name = pantryDraft.name.trim();
@@ -53,6 +59,51 @@ export const IngredientList: React.FC = () => {
     } else {
       refresh();
     }
+  };
+
+  const handleStartEditIngredient = (item: {
+    id: string;
+    name: string;
+    preferred_brand?: string;
+    preferred_store?: string;
+  }) => {
+    setEditingIngredientId(item.id);
+    setEditDraft({
+      name: item.name,
+      preferredBrand: item.preferred_brand ?? '',
+      preferredStore: item.preferred_store ?? '',
+    });
+  };
+
+  const handleCancelEditIngredient = () => {
+    setEditingIngredientId(null);
+    setEditDraft({ name: '', preferredBrand: '', preferredStore: '' });
+  };
+
+  const handleSaveIngredient = async (ingredientId: string) => {
+    const name = editDraft.name.trim();
+    if (!name) return;
+
+    const preferredBrand = editDraft.preferredBrand.trim();
+    const preferredStore = editDraft.preferredStore.trim();
+
+    const { error } = await supabase
+      .from('ingredients')
+      .update({
+        name,
+        preferred_brand: preferredBrand || null,
+        preferred_store: preferredStore || null,
+      })
+      .eq('id', ingredientId);
+
+    if (error) {
+      console.error('Error updating ingredient:', error);
+      return;
+    }
+
+    setEditingIngredientId(null);
+    setEditDraft({ name: '', preferredBrand: '', preferredStore: '' });
+    refresh();
   };
 
   if (loading) {
@@ -146,19 +197,83 @@ export const IngredientList: React.FC = () => {
               }
               return (
                 <Card key={item.id} condensed className="ingredient-card">
-                  <button
-                    onClick={() => handleDeleteIngredient(item.id, item.name)}
-                    className="delete-button"
-                    title="Delete ingredient"
-                  >
-                    ✕
-                  </button>
-                  <h3>{item.name}</h3>
-                  {item.preferred_brand && (
-                    <p className="muted">Preferred brand: {item.preferred_brand}</p>
-                  )}
-                  {item.preferred_store && (
-                    <p className="muted">Preferred store: {item.preferred_store}</p>
+                  {editingIngredientId === item.id ? (
+                    <div className="meal-form">
+                      <div>
+                        <label className="label">Ingredient name</label>
+                        <input
+                          value={editDraft.name}
+                          onChange={(event) =>
+                            setEditDraft((prev) => ({
+                              ...prev,
+                              name: event.target.value,
+                            }))
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="label">Preferred brand</label>
+                        <input
+                          value={editDraft.preferredBrand}
+                          onChange={(event) =>
+                            setEditDraft((prev) => ({
+                              ...prev,
+                              preferredBrand: event.target.value,
+                            }))
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="label">Preferred store</label>
+                        <input
+                          value={editDraft.preferredStore}
+                          onChange={(event) =>
+                            setEditDraft((prev) => ({
+                              ...prev,
+                              preferredStore: event.target.value,
+                            }))
+                          }
+                        />
+                      </div>
+                      <div className="edit-actions">
+                        <Button
+                          className="primary"
+                          onClick={() => handleSaveIngredient(item.id)}
+                          disabled={!editDraft.name.trim()}
+                        >
+                          Save changes
+                        </Button>
+                        <Button className="ghost" onClick={handleCancelEditIngredient}>
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="ingredient-card-actions">
+                        <button
+                          onClick={() => handleStartEditIngredient(item)}
+                          className="edit-button"
+                          title="Edit ingredient"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteIngredient(item.id, item.name)}
+                          className="delete-button"
+                          title="Delete ingredient"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      <h3>{item.name}</h3>
+                      {item.preferred_brand && (
+                        <p className="muted">Preferred brand: {item.preferred_brand}</p>
+                      )}
+                      {item.preferred_store && (
+                        <p className="muted">Preferred store: {item.preferred_store}</p>
+                      )}
+                    </>
                   )}
                 </Card>
               );

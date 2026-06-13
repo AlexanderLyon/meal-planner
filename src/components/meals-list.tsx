@@ -141,14 +141,122 @@ const NewMealForm = ({ onMealAdded }: { onMealAdded?: () => void }) => {
   );
 };
 
+const EditMealForm = ({
+  meal,
+  onSave,
+  onCancel,
+}: {
+  meal: Meal;
+  onSave: () => void;
+  onCancel: () => void;
+}) => {
+  const [mealName, setMealName] = useState(meal.name);
+  const [ingredients, setIngredients] = useState<MealIngredient[]>(meal.ingredients);
+  const [instructions, setInstructions] = useState(meal.instructions ?? '');
+  const [ingredientDraft, setIngredientDraft] = useState({ name: '', quantity: '', unit: '' });
+
+  const createId = (prefix: string) => `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
+
+  const handleAddIngredient = () => {
+    const name = ingredientDraft.name.trim();
+    const unit = ingredientDraft.unit.trim();
+    const quantity = Number(ingredientDraft.quantity);
+    if (!name || !unit || Number.isNaN(quantity) || quantity <= 0) return;
+    setIngredients((prev) => [...prev, { id: createId('ing'), name, quantity, unit }]);
+    setIngredientDraft({ name: '', quantity: '', unit: '' });
+  };
+
+  const handleRemoveIngredient = (id: string) => {
+    setIngredients((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const handleSave = async () => {
+    const name = mealName.trim();
+    if (!name) return;
+    const { error } = await supabase
+      .from('meals')
+      .update({ name, ingredients, instructions: instructions.trim() || null })
+      .eq('id', meal.id);
+    if (error) {
+      console.error('Error updating meal:', error);
+      return;
+    }
+    onSave();
+  };
+
+  return (
+    <div className="meal-form">
+      <div>
+        <label className="label">Meal name</label>
+        <input value={mealName} onChange={(e) => setMealName(e.target.value)} />
+      </div>
+
+      <div>
+        <label className="label">Ingredients</label>
+        <div className="ingredient-row">
+          <input
+            placeholder="Ingredient"
+            value={ingredientDraft.name}
+            onChange={(e) => setIngredientDraft((prev) => ({ ...prev, name: e.target.value }))}
+          />
+          <input
+            type="number"
+            min="0"
+            step="0.25"
+            placeholder="Qty"
+            value={ingredientDraft.quantity}
+            onChange={(e) => setIngredientDraft((prev) => ({ ...prev, quantity: e.target.value }))}
+          />
+          <input
+            placeholder="Unit"
+            value={ingredientDraft.unit}
+            onChange={(e) => setIngredientDraft((prev) => ({ ...prev, unit: e.target.value }))}
+          />
+          <Button className="ghost" onClick={handleAddIngredient}>
+            Add
+          </Button>
+        </div>
+      </div>
+
+      <div className="chip-list">
+        {ingredients.map((ingredient) => (
+          <span key={ingredient.id} className="chip">
+            {ingredient.name} · {ingredient.quantity} {ingredient.unit}
+            <Button className="chip-action" onClick={() => handleRemoveIngredient(ingredient.id)}>
+              Remove
+            </Button>
+          </span>
+        ))}
+      </div>
+
+      <div>
+        <label className="label">Instructions</label>
+        <textarea value={instructions} onChange={(e) => setInstructions(e.target.value)} />
+      </div>
+
+      <div className="edit-actions">
+        <Button className="primary" onClick={handleSave} disabled={!mealName.trim()}>
+          Save changes
+        </Button>
+        <Button className="ghost" onClick={onCancel}>
+          Cancel
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 const SavedMeals = ({
   meals,
   onDelete,
+  onEdited,
 }: {
   meals: Meal[];
   onDelete: (id: string, name: string) => void;
+  onEdited: () => void;
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [editingMealId, setEditingMealId] = useState<string | null>(null);
 
   return (
     <div className="search-wrapper">
@@ -185,22 +293,44 @@ const SavedMeals = ({
           }
           return (
             <Card key={meal.id} condensed className="meal-card">
-              <button
-                onClick={() => onDelete(meal.id, meal.name)}
-                className="delete-button"
-                title="Delete meal"
-              >
-                ✕
-              </button>
-              <h3>{meal.name}</h3>
-              <ul>
-                {meal.ingredients.map((ingredient) => (
-                  <li key={ingredient.id}>
-                    {ingredient.name} · {ingredient.quantity} {ingredient.unit}
-                  </li>
-                ))}
-              </ul>
-              {meal.instructions && <p>{meal.instructions}</p>}
+              {editingMealId === meal.id ? (
+                <EditMealForm
+                  meal={meal}
+                  onSave={() => {
+                    setEditingMealId(null);
+                    onEdited();
+                  }}
+                  onCancel={() => setEditingMealId(null)}
+                />
+              ) : (
+                <>
+                  <div className="meal-card-actions">
+                    <button
+                      onClick={() => setEditingMealId(meal.id)}
+                      className="edit-button"
+                      title="Edit meal"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => onDelete(meal.id, meal.name)}
+                      className="delete-button"
+                      title="Delete meal"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <h3>{meal.name}</h3>
+                  <ul>
+                    {meal.ingredients.map((ingredient) => (
+                      <li key={ingredient.id}>
+                        {ingredient.name} · {ingredient.quantity} {ingredient.unit}
+                      </li>
+                    ))}
+                  </ul>
+                  {meal.instructions && <p>{meal.instructions}</p>}
+                </>
+              )}
             </Card>
           );
         })}
@@ -234,7 +364,7 @@ export const MealsList: React.FC = () => {
     <Card title="Meals" subtitle="Save your favorite recipes with ingredients and measurements.">
       <div className="meal-grid">
         <NewMealForm onMealAdded={refresh} />
-        <SavedMeals meals={meals} onDelete={handleDeleteMeal} />
+        <SavedMeals meals={meals} onDelete={handleDeleteMeal} onEdited={refresh} />
       </div>
     </Card>
   );

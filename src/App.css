@@ -243,6 +243,10 @@ textarea {
   align-content: start;
 }
 
+.generated-meal-btns {
+  gap: 10px;
+}
+
 .ingredient-row {
   display: grid;
   grid-template-columns: 1.4fr 0.8fr 0.8fr auto;

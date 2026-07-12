@@ -1,6 +1,13 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@utils/supabase';
-import type { Meal, IngredientItem, WeeklyMealPlan, MealPlanDay, Household } from '../types';
+import type {
+  Meal,
+  MealIngredient,
+  IngredientItem,
+  WeeklyMealPlan,
+  MealPlanDay,
+  Household,
+} from '../types';
 
 type MealsContextValue = {
   meals: Meal[];
@@ -11,6 +18,19 @@ type MealsContextValue = {
   error: string | null;
   refresh: () => Promise<void>;
   updateMealForDay: (day: string, { mealId, note }: MealPlanDay) => Promise<void>;
+  addNewMeal: ({
+    mealName,
+    mealIngredients,
+    instructions,
+    onSuccess,
+    onError,
+  }: {
+    mealName: string;
+    mealIngredients: MealIngredient[];
+    instructions: string;
+    onSuccess?: () => void;
+    onError?: (error: string) => void;
+  }) => Promise<void>;
 };
 
 const initialMealPlan: WeeklyMealPlan = {
@@ -115,6 +135,52 @@ export function MealsProvider({
     [household, weeklyMeals]
   );
 
+  const addNewMeal = useCallback(
+    async ({
+      mealName,
+      mealIngredients,
+      instructions,
+      onSuccess,
+      onError,
+    }: {
+      mealName: string;
+      mealIngredients: MealIngredient[];
+      instructions: string;
+      onSuccess?: () => void;
+      onError?: (error: string) => void;
+    }) => {
+      const trimmedName = mealName.trim();
+      if (!trimmedName || !household) return;
+
+      console.table({
+        mealName: trimmedName,
+        mealIngredients,
+        instructions,
+        householdId: household.id,
+      });
+
+      try {
+        const { error } = await supabase.from('meals').insert({
+          name: trimmedName,
+          household_id: household.id,
+          ingredients: mealIngredients,
+          instructions: instructions.trim() || null,
+        });
+
+        if (error) {
+          console.error('Error inserting meal:', error);
+          return;
+        }
+
+        if (onSuccess) onSuccess();
+      } catch (err) {
+        console.error('Failed to add meal:', err);
+        if (onError) onError((err as Error).message);
+      }
+    },
+    [household]
+  );
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -128,6 +194,7 @@ export function MealsProvider({
       loading,
       error,
       refresh: fetchData,
+      addNewMeal,
       updateMealForDay,
     }),
     [
@@ -137,6 +204,7 @@ export function MealsProvider({
       loading,
       error,
       fetchData,
+      addNewMeal,
       updateMealForDay,
       savingMealPlanForDay,
     ]

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card } from '@components/Card';
 import { Button } from '@components/Button';
 import { SkeletonLoader } from '@components/skeleton-loader';
+import { MealGeneration } from '@components/meal-generation';
 import { useHousehold } from '@context/useHousehold';
 import { supabase } from '@utils/supabase';
 import type { Meal, MealIngredient } from '../types';
@@ -17,6 +18,7 @@ const NewMealForm = ({ onMealAdded }: { onMealAdded?: () => void }) => {
   });
   const [mealIngredients, setMealIngredients] = useState<MealIngredient[]>([]);
   const [instructions, setInstructions] = useState('');
+  const { addNewMeal } = useMeals();
 
   const createId = (prefix: string) => `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
 
@@ -36,29 +38,17 @@ const NewMealForm = ({ onMealAdded }: { onMealAdded?: () => void }) => {
   };
 
   const handleAddMeal = async () => {
-    const name = mealName.trim();
-    if (!name || !household) return;
-
-    try {
-      const { error } = await supabase.from('meals').insert({
-        name,
-        household_id: household.id,
-        ingredients: mealIngredients,
-        instructions: instructions.trim() || null,
-      });
-
-      if (error) {
-        console.error('Error inserting meal:', error);
-        return;
-      }
-
-      setMealName('');
-      setMealIngredients([]);
-      setInstructions('');
-      onMealAdded?.();
-    } catch (err) {
-      console.error('Failed to add meal:', err);
-    }
+    addNewMeal({
+      mealName,
+      mealIngredients,
+      instructions,
+      onSuccess: () => {
+        setMealName('');
+        setMealIngredients([]);
+        setInstructions('');
+        onMealAdded?.();
+      },
+    });
   };
 
   return (
@@ -361,11 +351,14 @@ export const MealsList: React.FC = () => {
   }
 
   return (
-    <Card title="Meals" subtitle="Save your favorite recipes with ingredients and measurements.">
-      <div className="meal-grid">
-        <NewMealForm onMealAdded={refresh} />
-        <SavedMeals meals={meals} onDelete={handleDeleteMeal} onEdited={refresh} />
-      </div>
-    </Card>
+    <>
+      <Card title="Meals" subtitle="Save your favorite recipes with ingredients and measurements.">
+        <div className="meal-grid">
+          <NewMealForm onMealAdded={refresh} />
+          <SavedMeals meals={meals} onDelete={handleDeleteMeal} onEdited={refresh} />
+        </div>
+      </Card>
+      <MealGeneration />
+    </>
   );
 };

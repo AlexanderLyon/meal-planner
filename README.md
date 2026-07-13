@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# Meal Planner
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Meal Planner is a web app for simplifying meals and grocery planning. The app is intended to help users:
 
-Currently, two official plugins are available:
+- Plan meals for the week
+- Track favorite recipes and ingredients
+- Get AI-generated meal suggestions
+- Help create shopping lists based on the week's planned meals
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
 
-## React Compiler
+Install dependencies:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+To run the full development environment (Vite frontend + API functions):
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev:full
 ```
+
+To run the Vite frontend only (excludes API functions):
+
+```bash
+npm run dev:frontend
+```
+
+Duplicate the `.env.example` file and rename it to `.env`. Then fill in the required environment variables with your own values.
+
+## User Onboarding
+
+Sessions in this app are centered around the concept of "households" rather than individual user accounts. A unique UUID code is generated for each household and can be shared with other members - allowing users to collaborate on meal planning without needing to create accounts.
+
+When launching the app, users are given a choice to either:
+
+- Create a new household (generates a new UUID)
+- Join an existing household (requires entering an existing UUID from another user or a shared link)
+
+## Supabase
+
+The app uses a Supabase Postgres database for storing meals, ingredients, weekly plans, and household data. You will need to set up a Supabase project and configure the following environment variables:
+
+```
+VITE_SUPABASE_URL=
+VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=
+```
+
+## Gemini API
+
+The meal generation functionality uses the Google Gemini API for AI-powered meal suggestions. You will need to set up an API key and configure it in your environment variables.
+
+```
+GOOGLE_GENAI_API_KEY=
+```
+
+See the official [Gemini API documentation](https://ai.google.dev/gemini-api/docs) for more details on how to obtain an API key and use the service.
+
+## Vercel Serverless API Functions
+
+This project uses Vercel serverless functions for the following backend logic:
+
+- `/api/generate-meal` - Handles AI meal generation requests using Gemini
+
+Each function is deployed independently by Vercel and runs on demand.
+
+See the official [Vercel serverless functions documentation](https://vercel.com/docs/functions) for more details on how to create and manage these functions.
+
+## Deployment
+
+The app is designed to be deployed on Vercel.
+
+Common deployment flow:
+
+1. Push changes to the repository
+2. Import or connect the project in Vercel
+3. Configure any required environment variables (see `.env.example`)
+4. Let Vercel build and deploy the app

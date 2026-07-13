@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Card } from '@components/Card';
 import { Button } from '@components/Button';
-import { GoogleGenAI } from '@google/genai';
 import type { MealIngredient } from '../types';
 import { useMeals } from '@/context/mealsProvider';
 
@@ -14,75 +13,35 @@ type GeneratedMeal = {
 export const MealGeneration: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [generatedMeal, setGeneratedMeal] = useState<GeneratedMeal | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const { addNewMeal, refresh } = useMeals();
-  const ai = useMemo(
-    () => new GoogleGenAI({ apiKey: import.meta.env.VITE_GOOGLE_GENAI_API_KEY }),
-    []
-  );
 
   const generateMeal = async () => {
     setLoading(true);
+    setError(null);
     try {
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
-        contents:
-          'Create a creative dinner meal idea that uses under 10 ingredients - include the meal name, required ingredients, and brief instructions if needed.',
-        config: {
-          systemInstruction:
-            'You are a chef who specializes in creating simple but delicious meals at home.',
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: 'OBJECT',
-            required: ['mealName', 'ingredients'],
-            properties: {
-              mealName: { type: 'STRING' },
-              ingredients: {
-                type: 'ARRAY',
-                items: {
-                  type: 'OBJECT',
-                  properties: {
-                    id: { type: 'NUMBER' },
-                    name: { type: 'STRING' },
-                    quantity: { type: 'NUMBER' },
-                    unit: { type: 'STRING' },
-                  },
-                },
-              },
-              instructions: { type: 'STRING' },
-            },
-          },
-          temperature: 2,
+      const response = await fetch('/api/generate-meal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
       });
 
-      if (!response.text) {
-        setGeneratedMeal(null);
-        return;
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error: string };
+        throw new Error(errorData.error || 'Failed to generate meal');
       }
 
-      const parsed = JSON.parse(response.text) as Partial<GeneratedMeal>;
-      if (
-        typeof parsed.mealName === 'string' &&
-        Array.isArray(parsed.ingredients) &&
-        parsed.ingredients.every(
-          (item) =>
-            typeof item === 'object' &&
-            typeof item.id === 'number' &&
-            typeof item.name === 'string' &&
-            typeof item.quantity === 'number' &&
-            typeof item.unit === 'string'
-        )
-      ) {
-        setGeneratedMeal({
-          mealName: parsed.mealName,
-          ingredients: parsed.ingredients,
-          instructions: typeof parsed.instructions === 'string' ? parsed.instructions : '',
-        });
+      const data = (await response.json()) as { meal: GeneratedMeal | null };
+
+      if (data.meal) {
+        setGeneratedMeal(data.meal);
       } else {
-        setGeneratedMeal(null);
+        setError('Could not generate a meal. Please try again.');
       }
-    } catch (error) {
-      console.error('Error generating meal:', error);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred';
+      setError(message);
       setGeneratedMeal(null);
     } finally {
       setLoading(false);
@@ -90,6 +49,7 @@ export const MealGeneration: React.FC = () => {
   };
   return (
     <Card title="Generate Meal" subtitle="Use AI to generate meal ideas">
+      {error && <p style={{ color: '#d32f2f', marginBottom: '1rem' }}>{error}</p>}
       {generatedMeal ? (
         <div>
           <h3>{generatedMeal.mealName}</h3>
@@ -109,6 +69,7 @@ export const MealGeneration: React.FC = () => {
                   mealIngredients: generatedMeal.ingredients,
                   instructions: generatedMeal.instructions || '',
                   onSuccess: () => {
+                    setGeneratedMeal(null);
                     refresh();
                   },
                 })
@@ -120,6 +81,7 @@ export const MealGeneration: React.FC = () => {
               className="ghost"
               onClick={() => {
                 setGeneratedMeal(null);
+                setError(null);
                 generateMeal();
               }}
             >

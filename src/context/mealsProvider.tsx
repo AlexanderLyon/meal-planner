@@ -152,13 +152,6 @@ export function MealsProvider({
       const trimmedName = mealName.trim();
       if (!trimmedName || !household) return;
 
-      console.table({
-        mealName: trimmedName,
-        mealIngredients,
-        instructions,
-        householdId: household.id,
-      });
-
       try {
         const { error } = await supabase.from('meals').insert({
           name: trimmedName,

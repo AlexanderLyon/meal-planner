@@ -5,5 +5,12 @@ export const SkeletonLoader: React.FC<{ count?: number; height?: number | string
   count = 1,
   height = 20,
 }) => {
-  return <Skeleton className="skeleton-loader" count={count} height={height} />;
+  return (
+    <Skeleton
+      className="skeleton-loader"
+      count={count}
+      height={height}
+      baseColor="var(--surface)"
+    />
+  );
 };

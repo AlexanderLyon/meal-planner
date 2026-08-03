@@ -57,7 +57,7 @@
   height: 44px;
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: #fff;
+  background: var(--surface);
   align-items: center;
   justify-content: center;
   gap: 4px;
@@ -144,7 +144,7 @@
   border-radius: 999px;
   border: 1px solid var(--border);
   gap: 0.35rem;
-  background: #ffffff;
+  background: var(--surface);
 }
 
 .toggle button {
@@ -185,7 +185,8 @@ textarea {
   padding: 0.75rem 0.9rem;
   font-family: 16px;
   font-size: 0.95rem;
-  background: #fff;
+  background: var(--surface);
+  color: inherit;
 }
 
 textarea {
@@ -264,7 +265,7 @@ textarea {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.4rem 0.75rem;
@@ -346,7 +347,7 @@ textarea {
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 1rem;
-  background: #fff;
+  background: var(--surface);
   display: grid;
   gap: 0.75rem;
 }
@@ -408,7 +409,7 @@ textarea {
 
 .shopping-item {
   border-radius: 16px;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   padding: 1rem;
   display: flex;
@@ -429,6 +430,13 @@ textarea {
 
 .my-1 {
   margin: 0.75rem 0;
+}
+
+.theme-toggle.button {
+  padding: 2px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media (max-width: 900px) {
@@ -458,7 +466,7 @@ textarea {
     min-width: 180px;
     border: 1px solid var(--border);
     border-radius: 12px;
-    background: white;
+    background: var(--surface-raised);
     box-shadow: var(--shadow-soft);
     padding: 0.4rem;
     z-index: 20;
@@ -480,5 +488,10 @@ textarea {
   .navigation a.active {
     background: rgba(56, 120, 255, 0.12);
     text-decoration: none;
+  }
+
+  .theme-toggle {
+    justify-content: flex-start;
+    box-shadow: none;
   }
 }

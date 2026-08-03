@@ -16,8 +16,26 @@
   --succulent: #75a375;
   --border: rgba(15, 23, 42, 0.12);
   --panel: rgba(255, 255, 255, 0.82);
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --page-background: radial-gradient(circle at top, #ffffff 0%, #f5f1e9 35%, #e8edf7 100%);
   --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.08);
   --card-border-radius: 24px;
+}
+
+:root[data-theme='dark'] {
+  color: #e5e7eb;
+  background-color: #111827;
+  --accent: #8ba9ff;
+  --muted: #a7b1c2;
+  --pale-green: #183525;
+  --succulent: #8abf8a;
+  --border: rgba(226, 232, 240, 0.18);
+  --panel: rgba(31, 41, 55, 0.9);
+  --surface: #1f2937;
+  --surface-raised: #273449;
+  --page-background: radial-gradient(circle at top, #273449 0%, #171d2b 45%, #111827 100%);
+  --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.3);
 }
 
 * {
@@ -27,7 +45,10 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at top, #ffffff 0%, #f5f1e9 35%, #e8edf7 100%);
+  background: var(--page-background);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 a {

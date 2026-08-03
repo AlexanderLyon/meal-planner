@@ -82,16 +82,16 @@ export const NavigationMenu: React.FC = () => {
       </Button>
 
       <nav id="main-navigation" className={`navigation ${isOpen ? 'is-open' : ''}`}>
-        <NavLink to="/weekly-plan" onClick={() => setIsOpen(false)}>
+        <NavLink to="/weekly-plan" onClick={() => setIsOpen(false)} tabIndex={0}>
           This Week
         </NavLink>
-        <NavLink to="/meals" onClick={() => setIsOpen(false)}>
+        <NavLink to="/meals" onClick={() => setIsOpen(false)} tabIndex={0}>
           Meals
         </NavLink>
-        <NavLink to="/ingredients" onClick={() => setIsOpen(false)}>
+        <NavLink to="/ingredients" onClick={() => setIsOpen(false)} tabIndex={0}>
           Ingredients
         </NavLink>
-        <NavLink to="/shopping" onClick={() => setIsOpen(false)}>
+        <NavLink to="/shopping" onClick={() => setIsOpen(false)} tabIndex={0}>
           Shopping List
         </NavLink>
         <Button
@@ -100,6 +100,7 @@ export const NavigationMenu: React.FC = () => {
           onClick={toggleTheme}
           aria-pressed={isDarkMode}
           aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+          tabIndex={0}
         >
           {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
         </Button>

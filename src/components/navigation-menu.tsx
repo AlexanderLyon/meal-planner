@@ -102,7 +102,10 @@ export const NavigationMenu: React.FC = () => {
           aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
           tabIndex={0}
         >
-          {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+          <span className="flex-center gap-2">
+            {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            <span className="mobile-only">{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+          </span>
         </Button>
       </nav>
     </div>

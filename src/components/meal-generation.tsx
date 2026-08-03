@@ -110,7 +110,7 @@ export const MealGeneration: React.FC = () => {
           {loading ? (
             'Cooking something up...'
           ) : (
-            <div className="flex-center">
+            <div className="flex-center gap-2">
               <AIIcon />
               <span>Get Inspired</span>
             </div>

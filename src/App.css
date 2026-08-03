@@ -428,12 +428,15 @@ textarea {
   justify-content: center;
 }
 
+.gap-2 {
+  gap: 0.5rem;
+}
+
 .my-1 {
   margin: 0.75rem 0;
 }
 
 .theme-toggle.button {
-  padding: 2px 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -490,8 +493,18 @@ textarea {
     text-decoration: none;
   }
 
-  .theme-toggle {
-    justify-content: flex-start;
+  .theme-toggle.button {
+    margin-top: 10px;
     box-shadow: none;
+  }
+}
+
+@media (min-width: 701px) {
+  .mobile-only {
+    display: none;
+  }
+
+  .theme-toggle.button {
+    padding: 2px 5px;
   }
 }
